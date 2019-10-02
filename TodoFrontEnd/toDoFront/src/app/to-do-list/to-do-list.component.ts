@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ToDoCart } from 'src/interfaces/interface';
 import { DataService } from 'src/service/data.service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-to-do-list',
   templateUrl: './to-do-list.component.html',
@@ -9,12 +9,34 @@ import { DataService } from 'src/service/data.service';
 })
 export class ToDoListComponent implements OnInit {
    _toDoList: ToDoCart[] = [];
-  token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjVkOTM5ZDYxMDU0YWRiNjRlYTQ2NTMxZCIsImVtYWlsIjoiYWxhYWFsc2hhbXk5NEBvdXRsb29rLmNvbSIsInBhc3N3b3JkIjoidG9Eb1Bhc3N3b3JkNSIsIl9fdiI6MH0sImlhdCI6MTU2OTk1NTY5N30.uPZ5r-LBGfkUFRUBeLfkJ6Us_yRhDn-BiYUqj1zOfmI"
-  postedBy="5d939d61054adb64ea46531d"
-  constructor(private dataService: DataService) {
+    newCart :ToDoCart[] = [];
+    token="";
+    postedBy="";
+  constructor(private dataService: DataService,private router:Router,) {
    }
   ngOnInit() {
+    this.token = localStorage.getItem("token");
+    this.postedBy = localStorage.getItem("userId");
+    this.getUserCards();
+    if(!this.postedBy || !this.token){
+      this.router.navigate(['/login']);
+    }
+  }
+  getUserCards(){
     this.dataService.getUserCarts({postedBy:this.postedBy},this.token)
     .subscribe((cart: ToDoCart[]) => this._toDoList = cart);
+  }
+  addNewCard(form,e){
+    form.value.postedBy = this.postedBy;
+    console.log(form.value);
+    this.dataService.addUserCarts(form.value,this.token)
+    .subscribe((cart: ToDoCart[]) => {
+      this.newCart = cart; 
+      this.getUserCards();} );
+//);
+  }
+  logOut(){
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 }

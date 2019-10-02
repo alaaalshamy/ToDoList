@@ -409,7 +409,7 @@ iframe {
 [ Responsive ]*/
 
 .wrapCard {
-  width: 390px;
+  width: 100px;
   background: #fff;
   border-radius: 10px;
   overflow: hidden;

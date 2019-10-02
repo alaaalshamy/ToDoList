@@ -7,24 +7,31 @@ import {ToDoCart,User} from  '../interfaces/interface'
   providedIn: 'root'
 })
 export class DataService {
-  url = '';
+url="http://localhost:3000/"
   constructor(private http: HttpClient) { }
 
   getUserCarts(data,token) : Observable<ToDoCart[]> {
     console.log(token)
     console.log(data)
-    return this.http.post<ToDoCart[]>('http://localhost:3000/toDoCart/getUserCarts/'+token,data)
+    return this.http.post<ToDoCart[]>(this.url+'toDoCart/getUserCarts/'+token,data)
         .pipe(
             catchError(this.handleError)
         );
 }
-loginUser(data): Observable<User[]>{
-  return this.http.post<User[]>('http://localhost:3000/users/login',data)
-  .pipe(
-      catchError(this.handleError)
-  );
+  loginUser(data) : Observable<User[]>{
+    return this.http.post<User[]>(this.url+'users/login',data)
+      .pipe(
+          catchError(this.handleError)
+      );
 }
-
+  addUserCarts(data,token) : Observable<ToDoCart[]> {
+    console.log(token)
+    console.log(data)
+    return this.http.post<ToDoCart[]>(this.url+'toDoCart/addNewCart/'+token,data)
+        .pipe(
+            catchError(this.handleError)
+        );
+}
 private handleError(error: any) {
   console.error('server error:', error);
   if (error.error instanceof Error) {

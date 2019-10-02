@@ -12,6 +12,7 @@ import {  User } from 'src/interfaces/interface';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   userInfo:any;
+  errMessage :any;
   constructor(private router:Router,private dataService:DataService) {
     this.loginForm = new FormGroup({
       email: new FormControl(null,[Validators.required, Validators.email]),
@@ -27,12 +28,18 @@ export class LoginComponent implements OnInit {
 loginUser(form,e){
   if(this.loginForm.valid){
     this.dataService.loginUser(this.loginForm.value)
-    .subscribe((userunfo: User[]) => {
-      this.userInfo = userunfo;
-      this.router.navigate(['/Home']);
+    .subscribe((userinfo: User[]) => {
+      this.userInfo = userinfo;
+      if(this.userInfo.status ==  true){
+        localStorage.setItem('token',this.userInfo.token );
+        localStorage.setItem('userId',this.userInfo.user._id );
+        this.router.navigate(['/Home']);
+      }
+      else{
+        this.errMessage = (this.userInfo.err == "password not valid" ) ? "email or password not valid" :(this.userInfo.err== "Email Not Found")? "This email not registered": "Not valid user"
+      }  
     },err => {
       console.log('API  not Sent');
-      console.log(err);
     });
     
   }else{

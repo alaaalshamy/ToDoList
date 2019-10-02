@@ -25,17 +25,15 @@ router.post('/login', ExpressJoi(bodySchema),function(req, res, next) {
           console.log(err);
           return;
       }
-      console.log("///////////")
-      console.log(user)
       if(user == null){
-          res.json([{err:"Email Not Found "},false]);
+          res.json({err:"Email Not Found",status:false});
       }else {
           if(req.body.password === user.password)
           {
               const jsontoken = jwt.sign({user: user},'userSecret-key');
-              res.json({ user: user, token:jsontoken});
+              res.json({ user: user, token:jsontoken ,status:true});
           }else {
-              res.json([{err:"password not valid"},false]);
+            res.json({err:"password not valid",status:false});
           }
       }
   });
