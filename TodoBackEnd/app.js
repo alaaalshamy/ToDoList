@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://alaaahmed:mlabpassword123@ds229088.mlab.com:29088/to-do-list');
+mongoose.connect('mongodb://<user:password>@ds229088.mlab.com:29088/to-do-list');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var toDoCartRouter = require('./routes/toDoCart');
